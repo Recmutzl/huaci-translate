@@ -30,40 +30,63 @@
     img { max-width: 100%; display: block; }
     a { color: var(--green); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .page { max-width: 440px; margin: 0 auto; padding: 28px 22px 72px; }
+    .wrap {
+      width: min(1120px, calc(100% - clamp(32px, 6vw, 80px)));
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 72px) 0 clamp(48px, 8vw, 96px);
+    }
+    .hero, .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: clamp(24px, 4vw, 64px);
+      align-items: center;
+    }
+    .hero { margin-bottom: clamp(56px, 8vw, 96px); }
+    .split { margin: clamp(64px, 9vw, 112px) 0; }
+    .split.flip { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
+    .split.flip .copy { order: 2; }
     .eyebrow {
       display: flex; align-items: center; gap: 10px;
       font-size: 13px; letter-spacing: .08em; color: var(--muted);
     }
     .eyebrow img { width: 28px; height: 28px; border-radius: 7px; }
     h1 {
-      font-size: 40px; line-height: 1.15; font-weight: 650;
-      letter-spacing: -0.04em; margin: 22px 0 12px;
+      font-size: clamp(40px, 5.4vw, 68px);
+      line-height: 1.08; font-weight: 650;
+      letter-spacing: -0.045em; margin: 18px 0 14px;
     }
-    .lead { font-size: 18px; color: #3a3a3c; margin: 0 0 28px; }
-    figure { margin: 0 0 36px; }
-    figure img { width: 100%; border-radius: 18px; }
-    figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
     h2 {
-      font-size: 28px; line-height: 1.25; font-weight: 640;
-      letter-spacing: -0.03em; margin: 48px 0 10px;
+      font-size: clamp(28px, 3vw, 40px);
+      line-height: 1.2; font-weight: 640;
+      letter-spacing: -0.03em; margin: 0 0 12px;
     }
+    .lead { font-size: clamp(17px, 1.5vw, 20px); color: #3a3a3c; margin: 0; max-width: 36em; }
     p { margin: 0 0 14px; }
     .quiet { color: var(--muted); font-size: 15px; }
+    figure { margin: 0; }
+    figure img, .photo {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: clamp(16px, 2vw, 24px);
+    }
+    figure.portrait img { aspect-ratio: 4 / 5; }
+    figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .visual { display: grid; gap: 16px; }
     .mock {
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(60,40,20,.06);
+      box-shadow: 0 16px 40px rgba(60,40,20,.07);
       overflow: hidden;
-      margin: 18px 0 8px;
     }
     .toast-h, .side-h {
       display: flex; align-items: center; justify-content: space-between;
       padding: 10px 14px; font-size: 12px; color: var(--muted);
       border-bottom: 1px solid var(--line);
     }
-    .toast-b { padding: 14px; font-size: 15px; }
+    .toast-b { padding: 16px; font-size: 16px; }
     .meta { margin-top: 8px; font-size: 12px; color: var(--muted); }
     .side-h strong { color: var(--ink); font-size: 14px; }
     .badge {
@@ -71,7 +94,7 @@
       background: var(--green-soft); color: var(--green);
       font-size: 11px; font-weight: 600; border: 1px solid #cfeedd;
     }
-    .row { padding: 12px 14px; border-bottom: 1px solid #f2f2f4; font-size: 14px; }
+    .row { padding: 12px 16px; border-bottom: 1px solid #f2f2f4; font-size: 14px; }
     .row:last-child { border-bottom: none; }
     .row.fail {
       background: #fffafa;
@@ -87,7 +110,7 @@
     }
     .skel { height: 8px; border-radius: 99px; background: #eeeef1; margin-bottom: 8px; }
     .skel.short { width: 68%; margin-bottom: 0; }
-    .ball-row { display: flex; align-items: center; gap: 16px; margin: 18px 0; }
+    .ball-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
     .ball {
       width: 54px; height: 54px; border-radius: 50%; background: #fff;
       color: var(--green); font-weight: 700; font-size: 18px;
@@ -95,9 +118,24 @@
       box-shadow: 0 8px 24px rgba(0,0,0,.12);
       flex: none;
     }
+    .guide { margin-top: clamp(48px, 7vw, 88px); }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 24px);
+      margin-top: 22px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: clamp(18px, 2vw, 24px);
+    }
+    .card h2 { font-size: clamp(22px, 2vw, 26px); }
     ol.steps { margin: 8px 0 0; padding: 0; list-style: none; counter-reset: step; }
     ol.steps li {
-      position: relative; padding: 0 0 16px 36px; counter-increment: step;
+      position: relative; padding: 0 0 14px 32px; counter-increment: step;
+      font-size: 14px;
     }
     ol.steps li::before {
       content: counter(step);
@@ -109,119 +147,155 @@
     .note {
       background: #fff; border-radius: 14px; padding: 14px 16px;
       border: 1px solid var(--line); font-size: 14px; color: #3a3a3c;
+      margin-top: 14px;
     }
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: .92em; background: rgba(0,0,0,.05);
       padding: 1px 5px; border-radius: 5px;
     }
-    footer { margin-top: 48px; font-size: 13px; color: var(--muted); }
+    footer { margin-top: 56px; font-size: 13px; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px) {
+      .hero, .split, .split.flip { grid-template-columns: 1fr; }
+      .split.flip .copy { order: 0; }
+      .hero { margin-bottom: 48px; }
+      .split { margin: 56px 0; }
+      figure img, .photo, figure.portrait img { aspect-ratio: 16 / 10; }
+    }
   </style>
 </head>
 <body>
-  <main class="page">
-    <div class="eyebrow"><img src="img/icon128.png" alt="">划词翻译</div>
-    <h1>选中，就译成中文。</h1>
-    <p class="lead">短句停在文字旁边。长文在页面右侧展开。某一段没有译成，留下一句安静的话，你可以再试一次。</p>
-
-    <figure>
-      <img src="img/hero-desk.jpg" alt="阳光下的木桌，摊开的空白笔记本、一只杯子，和一台屏幕留白的笔记本。">
-      <figcaption>阅读本来就是一件安静的事。</figcaption>
-    </figure>
-
-    <h2>一句，停在旁边。</h2>
-    <p>在网页上松开鼠标，译文出现在选区附近。纯中文不会被打扰。也可以关掉自动翻译，改成先看到一个按钮，点了再译。</p>
-    <div class="mock" aria-hidden="true">
-      <div class="toast-h"><span>划词翻译</span><span>✕</span></div>
-      <div class="toast-b">
-        清晨的镇子很安静。
-        <div class="meta">原文：The morning was quiet · 百度</div>
+  <main class="wrap">
+    <header class="hero">
+      <div>
+        <div class="eyebrow"><img src="img/icon128.png" alt="">划词翻译</div>
+        <h1>选中，就译成中文。</h1>
+        <p class="lead">短句停在文字旁边。长文在页面右侧展开。某一段没有译成，留下一句安静的话，你可以再试一次。</p>
       </div>
-    </div>
-    <p class="quiet">点到弹层外面，或按 Esc，这条短译文会收起。页面滚动时，它跟着选区走。</p>
+      <figure>
+        <img src="img/hero-desk.jpg" alt="阳光下的木桌，摊开的空白笔记本、一只杯子，和一台屏幕留白的笔记本。">
+        <figcaption>阅读本来就是一件安静的事。</figcaption>
+      </figure>
+    </header>
 
-    <h2>一篇，在旁边读完。</h2>
-    <p>超过 500 字，或按下 <code>⌘ A</code>，右侧滑出侧窗。里面只有中文。点一段译文，原文会亮起来；点原文，侧窗会滚到对应的一段。</p>
-    <figure>
-      <img src="img/side-panel.jpg" alt="书页旁边立着一张留白的卡片，左侧有一道很淡的绿线。">
-    </figure>
-    <div class="mock" aria-hidden="true">
-      <div class="side-h"><div><strong>全文翻译</strong><span class="badge">DeepSeek</span></div><span>收起</span></div>
-      <div class="row">清晨的镇子很安静。鸟在树上叫，街上渐渐有了去上班的人。</div>
-      <div class="row">安娜拿着一杯咖啡，沿主街往前走。</div>
-      <div class="row"><div class="skel"></div><div class="skel short"></div></div>
-    </div>
-    <p class="quiet">左缘可以拖宽，最宽到页面的一半。点空白处，或按 Esc，侧窗收成一枚圆球。译文还在，点一下就回来。</p>
-    <div class="ball-row">
-      <div class="ball">译</div>
-      <p class="quiet" style="margin:0">收起不是关掉。它只是先让开。</p>
-    </div>
-    <figure>
-      <img src="img/green-stone.jpg" alt="米色纸面上，一枚浅绿色的圆石靠在右侧。">
-    </figure>
-
-    <h2>没译成的那一段。</h2>
-    <p>长文是一段一段译的。某一段没有回来，不会整篇重来。它留在原来的位置，你可以只重译这一段。</p>
-    <div class="mock" aria-hidden="true">
-      <div class="row fail">
-        这一段未能完成翻译，轻点「重新翻译」继续
-        <div class="btn">重新翻译</div>
+    <section class="split">
+      <div class="copy">
+        <h2>一句，停在旁边。</h2>
+        <p>在网页上松开鼠标，译文出现在选区附近。纯中文不会被打扰。也可以关掉自动翻译，改成先看到一个按钮，点了再译。</p>
+        <p class="quiet">点到弹层外面，或按 Esc，这条短译文会收起。页面滚动时，它跟着选区走。</p>
       </div>
-    </div>
-    <p class="quiet">具体原因放在按钮的悬停里。顶栏会写着还有几段没完成，而不是把整篇又标成进行中。</p>
+      <div class="visual">
+        <div class="mock" aria-hidden="true">
+          <div class="toast-h"><span>划词翻译</span><span>✕</span></div>
+          <div class="toast-b">
+            清晨的镇子很安静。
+            <div class="meta">原文：The morning was quiet · 百度</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h2>两分钟，装到 Chrome。</h2>
-    <ol class="steps">
-      <li>在本仓库页面选择 Code，下载 ZIP，并解压。</li>
-      <li>打开 Chrome，地址栏输入 <code>chrome://extensions/</code>。</li>
-      <li>打开右上角的「开发者模式」。</li>
-      <li>点「加载未打包的扩展程序」，选中解压后的 <code>huaci-translate</code> 文件夹。</li>
-    </ol>
-    <p class="quiet">选的是文件夹本身。仓库里另有一份 <code>test-full.html</code>，装好后可以用它试长文。</p>
+    <section class="split flip">
+      <figure>
+        <img src="img/side-panel.jpg" alt="书页旁边立着一张留白的卡片，左侧有一道很淡的绿线。">
+      </figure>
+      <div class="copy">
+        <h2>一篇，在旁边读完。</h2>
+        <p>超过 500 字，或按下 <code>⌘ A</code>，右侧滑出侧窗。里面只有中文。点一段译文，原文会亮起来；点原文，侧窗会滚到对应的一段。</p>
+        <div class="mock" aria-hidden="true">
+          <div class="side-h"><div><strong>全文翻译</strong><span class="badge">DeepSeek</span></div><span>收起</span></div>
+          <div class="row">清晨的镇子很安静。鸟在树上叫，街上渐渐有了去上班的人。</div>
+          <div class="row">安娜拿着一杯咖啡，沿主街往前走。</div>
+          <div class="row"><div class="skel"></div><div class="skel short"></div></div>
+        </div>
+        <p class="quiet">左缘可以拖宽，最宽到页面的一半。点空白处，或按 Esc，侧窗收成一枚圆球。译文还在，点一下就回来。</p>
+        <div class="ball-row">
+          <div class="ball">译</div>
+          <p class="quiet" style="margin:0">收起不是关掉。它只是先让开。</p>
+        </div>
+      </div>
+    </section>
 
-    <h2>打开设置。</h2>
-    <p>这个扩展没有弹出按钮。设置在扩展详情里。</p>
-    <ol class="steps">
-      <li>回到 <code>chrome://extensions/</code>，找到「划词翻译」。</li>
-      <li>点「详细信息」，再点「扩展程序选项」。</li>
-      <li>确认「启用插件」是打开的。「选中后自动翻译」默认开启，关掉后会先出现翻译按钮。</li>
-      <li>选择引擎，填入对应的 ID 或密钥，点「保存设置」。</li>
-      <li>点「测试翻译」。能看到中文，就配置好了。</li>
-    </ol>
-    <div class="note">密钥只写在设置页里。不要写进代码，也不要发给别人。每个使用者填写自己的密钥。</div>
+    <section class="split">
+      <div class="copy">
+        <h2>没译成的那一段。</h2>
+        <p>长文是一段一段译的。某一段没有回来，不会整篇重来。它留在原来的位置，你可以只重译这一段。</p>
+        <div class="mock" aria-hidden="true">
+          <div class="row fail">
+            这一段未能完成翻译，轻点「重新翻译」继续
+            <div class="btn">重新翻译</div>
+          </div>
+        </div>
+        <p class="quiet">具体原因放在按钮的悬停里。顶栏会写着还有几段没完成，而不是把整篇又标成进行中。</p>
+      </div>
+      <figure class="portrait">
+        <img src="img/green-stone.jpg" alt="米色纸面上，一枚浅绿色的圆石靠在右侧。">
+      </figure>
+    </section>
 
-    <h2>申请百度翻译 API。</h2>
-    <p>短句可以走百度。标准版有免费额度，适合先用起来。长文不走百度，见下一节。</p>
-    <ol class="steps">
-      <li>打开 <a href="https://fanyi-api.baidu.com/" target="_blank" rel="noopener">百度翻译开放平台</a>，用百度账号登录。</li>
-      <li>开通「通用文本翻译 API」，选择标准版。</li>
-      <li>按页面提示创建应用。应用名可以写成「划词翻译」。</li>
-      <li>进入管理控制台的「开发者信息」，复制 APP ID 和密钥。</li>
-      <li>回到插件设置，引擎选「百度翻译」，把这两项分别填进对应输入框，保存，再点「测试翻译」。</li>
-    </ol>
-    <div class="note">
-      标准版大约每秒只能请求一次。连续划词时若提示访问频率受限，等一下再选即可。<br><br>
-      若提示 IP 不在白名单：在管理控制台的应用管理里，把你当前电脑的公网 IP 加进该应用的白名单。公网 IP 可以在搜索引擎里搜「我的 IP」查看。
-    </div>
+    <section class="guide">
+      <h2>装上，然后填上你自己的密钥。</h2>
+      <p class="quiet">密钥只出现在设置页里。不要写进代码，也不要发给别人。</p>
+      <div class="cards">
+        <article class="card">
+          <h2>两分钟装好</h2>
+          <ol class="steps">
+            <li>在仓库页面选择 Code，下载 ZIP，并解压。</li>
+            <li>打开 Chrome，地址栏输入 <code>chrome://extensions/</code>。</li>
+            <li>打开右上角的「开发者模式」。</li>
+            <li>点「加载未打包的扩展程序」，选中解压后的 <code>huaci-translate</code> 文件夹。</li>
+          </ol>
+          <p class="quiet">选的是文件夹本身。仓库里的 <code>test-full.html</code> 可以用来试长文。</p>
+        </article>
+        <article class="card">
+          <h2>打开设置</h2>
+          <p>这个扩展没有弹出按钮。设置在扩展详情里。</p>
+          <ol class="steps">
+            <li>回到 <code>chrome://extensions/</code>，找到「划词翻译」。</li>
+            <li>点「详细信息」，再点「扩展程序选项」。</li>
+            <li>确认「启用插件」是打开的。自动翻译可以关掉，关掉后会先出现按钮。</li>
+            <li>选择引擎，填入 ID 或密钥，点「保存设置」。</li>
+            <li>点「测试翻译」。能看到中文，就配置好了。</li>
+          </ol>
+        </article>
+        <article class="card">
+          <h2>申请百度翻译</h2>
+          <p>短句可以走百度标准版。长文不走百度。</p>
+          <ol class="steps">
+            <li>打开 <a href="https://fanyi-api.baidu.com/" target="_blank" rel="noopener">百度翻译开放平台</a>，用百度账号登录。</li>
+            <li>开通「通用文本翻译 API」，选择标准版。</li>
+            <li>创建应用。应用名可以写成「划词翻译」。</li>
+            <li>在管理控制台的「开发者信息」里复制 APP ID 和密钥。</li>
+            <li>引擎选「百度翻译」，填入这两项，保存，再点「测试翻译」。</li>
+          </ol>
+          <div class="note">标准版大约每秒一次。若提示 IP 不在白名单，把当前电脑的公网 IP 加进该应用的白名单。</div>
+        </article>
+      </div>
+    </section>
 
-    <h2>长文，需要 DeepSeek。</h2>
-    <p>侧窗里的全文固定使用 DeepSeek，这样可以分段并行，也不占用百度每秒一次的额度。只想划短句的话，可以只配置百度。</p>
-    <ol class="steps">
-      <li>打开 <a href="https://platform.deepseek.com/" target="_blank" rel="noopener">DeepSeek 开放平台</a>，注册并登录。</li>
-      <li>在 API Keys 里创建一个密钥。它通常只显示一次，请自己保存好。</li>
-      <li>在插件设置里先把引擎切到 DeepSeek，才能看到密钥输入框。填入后保存。</li>
-      <li>短句若仍想用百度，可以再把引擎切回百度。已经保存的 DeepSeek 密钥会留着，长文继续用它。</li>
-    </ol>
-    <p class="quiet">费用按量计算，译一篇普通网页通常只是很少的一点。请以 DeepSeek 官网的当前价格为准。</p>
-
-    <h2>文字会去哪里。</h2>
-    <p>选中的文字会发送到你所配置的百度或 DeepSeek，用来生成译文。密钥存在这台浏览器本地，不会写进这个仓库，也不会上传到插件作者的服务器。</p>
-    <p>网银、邮箱、病历这类页面，用的时候可以把插件先关掉。</p>
-
-    <footer>
-      划词翻译 · 0.1.0<br>
-      源代码与安装说明见仓库首页。本页是产品介绍，密钥不会出现在这里。
-    </footer>
+    <section class="split">
+      <div class="copy">
+        <h2>长文，需要 DeepSeek。</h2>
+        <p>侧窗里的全文固定使用 DeepSeek，这样可以分段并行，也不占用百度每秒一次的额度。只想划短句的话，可以只配置百度。</p>
+        <ol class="steps">
+          <li>打开 <a href="https://platform.deepseek.com/" target="_blank" rel="noopener">DeepSeek 开放平台</a>，注册并登录。</li>
+          <li>在 API Keys 里创建一个密钥。它通常只显示一次，请自己保存好。</li>
+          <li>在插件设置里先把引擎切到 DeepSeek，才能看到密钥输入框。填入后保存。</li>
+          <li>短句若仍想用百度，可以再把引擎切回百度。已经保存的 DeepSeek 密钥会留着，长文继续用它。</li>
+        </ol>
+        <p class="quiet">费用按量计算。请以 DeepSeek 官网的当前价格为准。</p>
+      </div>
+      <div class="copy">
+        <h2>文字会去哪里。</h2>
+        <p>选中的文字会发送到你所配置的百度或 DeepSeek，用来生成译文。密钥存在这台浏览器本地，不会写进这个仓库，也不会上传到插件作者的服务器。</p>
+        <p>网银、邮箱、病历这类页面，用的时候可以把插件先关掉。</p>
+        <div class="note">划词翻译 · 0.1.0。源代码与安装说明见仓库首页。本页是产品介绍，密钥不会出现在这里。</div>
+      </div>
+    </section>
   </main>
 </body>
 </html>

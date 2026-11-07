@@ -2,6 +2,17 @@
 
 选中网页里的文字，译成中文。短句停在选区旁边，长文在页面右侧展开。某一段没有译成时，可以只重译这一段。
 
+<p>
+  <img src="docs/img/hero-desk.jpg" alt="阳光下的木桌，摊开的笔记本和一台留白的屏幕" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/img/side-panel.jpg" alt="书页旁边一张留白的侧栏" width="100%"></td>
+    <td width="50%"><img src="docs/img/green-stone.jpg" alt="纸面上的一枚浅绿色圆石" width="100%"></td>
+  </tr>
+</table>
+
 这是一个 Chrome 扩展（Manifest V3）。密钥由每位使用者自己申请，只保存在自己的浏览器里。仓库中没有任何密钥。
 
 图文介绍：<https://recmutzl.github.io/huaci-translate/>（源文件在 [docs/index.html](docs/index.html)）
