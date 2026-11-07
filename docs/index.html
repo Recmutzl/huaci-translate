@@ -4,298 +4,364 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>划词翻译</title>
-  <meta name="description" content="选中网页里的文字，译成中文。短句停在旁边，长文在右侧慢慢展开。">
+  <meta name="description" content="选中网页里的文字，译成中文。短句停在旁边，长文在右侧展开。">
   <style>
     :root {
       --ink: #1d1d1f;
-      --muted: #6e6e73;
+      --gray: #6e6e73;
+      --bg: #f5f5f7;
       --line: rgba(0,0,0,.08);
-      --paper: #f4f1eb;
-      --card: #fffcf8;
-      --green: #0e7c64;
-      --green-soft: #e7f6f1;
-      --rose: #a15c5c;
-      --rose-line: #f0c2c2;
+      --blue: #0066cc;
+      --green: #10a37f;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: var(--paper);
+      background: #fff;
       color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
-      line-height: 1.7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-    img { max-width: 100%; display: block; }
-    a { color: var(--green); text-decoration: none; }
+    a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .wrap {
-      width: min(1120px, calc(100% - clamp(32px, 6vw, 80px)));
-      margin: 0 auto;
-      padding: clamp(28px, 5vw, 72px) 0 clamp(48px, 8vw, 96px);
+    img { max-width: 100%; display: block; }
+    nav {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 48px; padding: 0 clamp(16px, 4vw, 40px);
+      background: rgba(255,255,255,.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,.06);
     }
-    .hero, .split {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
-      gap: clamp(24px, 4vw, 64px);
-      align-items: center;
+    .brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+    .brand img { width: 20px; height: 20px; border-radius: 5px; }
+    .nav-links { display: flex; gap: clamp(14px, 2vw, 28px); }
+    .nav-links a { color: var(--ink); font-size: 12px; opacity: .8; }
+    .nav-links a:hover { opacity: 1; text-decoration: none; }
+    .hero, .chapter, .start, .close {
+      padding: clamp(72px, 12vw, 140px) clamp(20px, 5vw, 48px);
+      text-align: center;
+      scroll-margin-top: 56px;
     }
-    .hero { margin-bottom: clamp(56px, 8vw, 96px); }
-    .split { margin: clamp(64px, 9vw, 112px) 0; }
-    .split.flip { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); }
-    .split.flip .copy { order: 2; }
-    .eyebrow {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 13px; letter-spacing: .08em; color: var(--muted);
-    }
-    .eyebrow img { width: 28px; height: 28px; border-radius: 7px; }
+    .hero { padding-top: clamp(64px, 9vw, 108px); background: #fff; }
     h1 {
-      font-size: clamp(40px, 5.4vw, 68px);
-      line-height: 1.08; font-weight: 650;
-      letter-spacing: -0.045em; margin: 18px 0 14px;
+      margin: 0 auto 16px;
+      max-width: 12em;
+      font-size: clamp(48px, 8vw, 92px);
+      font-weight: 600;
+      letter-spacing: -0.045em;
+      line-height: 1.02;
+    }
+    .sub {
+      margin: 0 auto;
+      max-width: 28em;
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.5;
+      color: var(--gray);
+      font-weight: 400;
     }
     h2 {
-      font-size: clamp(28px, 3vw, 40px);
-      line-height: 1.2; font-weight: 640;
-      letter-spacing: -0.03em; margin: 0 0 12px;
+      margin: 0 auto 12px;
+      max-width: 14em;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
     }
-    .lead { font-size: clamp(17px, 1.5vw, 20px); color: #3a3a3c; margin: 0; max-width: 36em; }
-    p { margin: 0 0 14px; }
-    .quiet { color: var(--muted); font-size: 15px; }
-    figure { margin: 0; }
-    figure img, .photo {
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      border-radius: clamp(16px, 2vw, 24px);
+    .chapter p.lead, .start .lead, .close .lead {
+      margin: 0 auto 8px;
+      max-width: 34em;
+      font-size: clamp(17px, 1.6vw, 21px);
+      line-height: 1.5;
+      color: var(--gray);
     }
-    figure.portrait img { aspect-ratio: 4 / 5; }
-    figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); }
-    .visual { display: grid; gap: 16px; }
-    .mock {
-      background: var(--card);
-      border: 1px solid var(--line);
+    .stage {
+      width: min(1040px, 100%);
+      margin: clamp(36px, 6vw, 64px) auto 0;
+    }
+    .window {
+      color: #1d1d1f;
+      background: #fff;
       border-radius: 18px;
-      box-shadow: 0 16px 40px rgba(60,40,20,.07);
+      box-shadow: 0 30px 80px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.04);
       overflow: hidden;
+      text-align: left;
+      border: 1px solid rgba(0,0,0,.06);
     }
-    .toast-h, .side-h {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; font-size: 12px; color: var(--muted);
+    .winbar {
+      display: flex; align-items: center; gap: 6px;
+      height: 40px; padding: 0 14px;
+      background: #f6f6f6;
       border-bottom: 1px solid var(--line);
     }
-    .toast-b { padding: 16px; font-size: 16px; }
-    .meta { margin-top: 8px; font-size: 12px; color: var(--muted); }
-    .side-h strong { color: var(--ink); font-size: 14px; }
-    .badge {
-      margin-left: 8px; padding: 1px 7px; border-radius: 999px;
-      background: var(--green-soft); color: var(--green);
-      font-size: 11px; font-weight: 600; border: 1px solid #cfeedd;
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+    .dot:nth-child(1) { background: #ff5f57; }
+    .dot:nth-child(2) { background: #febc2e; }
+    .dot:nth-child(3) { background: #28c840; }
+    .url {
+      margin-left: 10px; flex: 1;
+      height: 22px; border-radius: 6px;
+      background: #fff; border: 1px solid var(--line);
+      color: #86868b; font-size: 11px;
+      display: flex; align-items: center; padding: 0 10px;
     }
-    .row { padding: 12px 16px; border-bottom: 1px solid #f2f2f4; font-size: 14px; }
-    .row:last-child { border-bottom: none; }
-    .row.fail {
-      background: #fffafa;
-      box-shadow: inset 3px 0 0 var(--rose-line);
-      color: var(--rose);
-      font-size: 13px;
+    .sheet {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 34%);
+      min-height: 420px;
+      background: #fafafa;
     }
-    .btn {
+    .article { padding: clamp(22px, 4vw, 48px); background: #fff; }
+    .article h3 { margin: 0 0 14px; font-size: clamp(22px, 2.4vw, 28px); letter-spacing: -0.03em; }
+    .article p { margin: 0 0 14px; font-size: 15px; line-height: 1.75; color: #1d1d1f; }
+    .mark { background: rgba(16,163,127,.18); border-radius: 4px; padding: 0 2px; }
+    .toast {
+      position: relative;
+      margin: -6px 8px 20px auto;
+      width: min(280px, 100%);
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 12px 32px rgba(0,0,0,.12);
+    }
+    .toast header, .side header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; font-size: 12px; color: #6e6e73;
+      border-bottom: 1px solid #f0f0f2;
+    }
+    .toast .body { padding: 12px 14px 14px; font-size: 15px; line-height: 1.6; }
+    .meta { margin-top: 8px; font-size: 12px; color: #6e6e73; }
+    .side {
+      background: #fff;
+      border-left: 1px solid var(--line);
+      display: flex; flex-direction: column;
+    }
+    .side header strong { color: #1d1d1f; font-size: 13px; }
+    .pill {
+      margin-left: 6px; padding: 1px 7px; border-radius: 99px;
+      background: #f0fdf9; color: #0b6e57; border: 1px solid #ccf5e4;
+      font-size: 10px; font-weight: 600;
+    }
+    .row { padding: 12px 14px; border-bottom: 1px solid #f3f3f5; font-size: 13px; line-height: 1.65; }
+    .row.on { background: #f0fdf9; box-shadow: inset 3px 0 0 var(--green); }
+    .row.bad {
+      display: flex; flex-direction: column; align-items: flex-start;
+      background: #fffafa; box-shadow: inset 3px 0 0 #f0c2c2; color: #a15c5c;
+    }
+    .focus { width: min(640px, 100%); margin-left: auto; margin-right: auto; }
+    .retry {
       display: inline-flex; margin-top: 10px;
-      border: 1px solid #d4d4d8; border-radius: 8px;
-      background: #fff; color: var(--ink);
-      font-size: 13px; padding: 6px 12px;
+      border: 1px solid #d4d4d8; background: #fff; color: #1d1d1f;
+      border-radius: 8px; padding: 6px 12px; font-size: 12px;
     }
     .skel { height: 8px; border-radius: 99px; background: #eeeef1; margin-bottom: 8px; }
-    .skel.short { width: 68%; margin-bottom: 0; }
-    .ball-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
-    .ball {
-      width: 54px; height: 54px; border-radius: 50%; background: #fff;
-      color: var(--green); font-weight: 700; font-size: 18px;
+    .skel.s { width: 70%; margin: 0; }
+    .chapter.dark { background: #000; color: #f5f5f7; }
+    .chapter.dark .lead { color: #a1a1a6; }
+    .chapter.dark .window { box-shadow: 0 40px 90px rgba(0,0,0,.45); }
+    .float-line {
+      display: flex; align-items: center; justify-content: center; gap: 22px;
+      margin-top: 36px;
+    }
+    .orb {
+      width: 64px; height: 64px; border-radius: 50%; background: #fff; color: var(--green);
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      font-size: 22px; font-weight: 700;
+      box-shadow: 0 12px 32px rgba(0,0,0,.18);
       flex: none;
     }
-    .guide { margin-top: clamp(48px, 7vw, 88px); }
-    .cards {
+    .chapter.dark .orb { box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+    .float-line p { margin: 0; max-width: 16em; text-align: left; color: inherit; font-size: 17px; line-height: 1.45; }
+    .start { background: var(--bg); text-align: left; }
+    .start h2, .start .lead { text-align: center; }
+    .grid {
+      width: min(1100px, 100%);
+      margin: clamp(36px, 5vw, 56px) auto 0;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(16px, 2vw, 24px);
-      margin-top: 22px;
+      gap: clamp(28px, 4vw, 56px);
     }
-    .card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: clamp(18px, 2vw, 24px);
-    }
-    .card h2 { font-size: clamp(22px, 2vw, 26px); }
-    ol.steps { margin: 8px 0 0; padding: 0; list-style: none; counter-reset: step; }
-    ol.steps li {
-      position: relative; padding: 0 0 14px 32px; counter-increment: step;
-      font-size: 14px;
-    }
-    ol.steps li::before {
-      content: counter(step);
-      position: absolute; left: 0; top: 2px;
-      width: 22px; height: 22px; border-radius: 50%;
-      background: var(--ink); color: #fff;
-      font-size: 12px; line-height: 22px; text-align: center;
-    }
+    .grid h3 { margin: 8px 0 10px; font-size: 24px; letter-spacing: -0.03em; }
+    .num { font-size: 13px; color: #86868b; letter-spacing: .08em; }
+    .grid p, .grid li { font-size: 15px; line-height: 1.6; color: #3a3a3c; }
+    ol { margin: 0; padding-left: 1.1em; }
+    ol li { margin: 0 0 8px; }
     .note {
-      background: #fff; border-radius: 14px; padding: 14px 16px;
-      border: 1px solid var(--line); font-size: 14px; color: #3a3a3c;
-      margin-top: 14px;
+      margin-top: 14px; font-size: 14px; line-height: 1.6; color: #3a3a3c;
     }
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: .92em; background: rgba(0,0,0,.05);
-      padding: 1px 5px; border-radius: 5px;
+    .close { background: #fff; }
+    .pair {
+      width: min(980px, 100%);
+      margin: clamp(28px, 4vw, 48px) auto 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(24px, 4vw, 64px);
+      text-align: left;
     }
-    footer { margin-top: 56px; font-size: 13px; color: var(--muted); }
-
-    @media (max-width: 900px) {
-      .cards { grid-template-columns: 1fr; }
+    .pair h3 { margin: 0 0 10px; font-size: 28px; letter-spacing: -0.03em; }
+    .pair p, .pair li { font-size: 15px; line-height: 1.65; color: #3a3a3c; }
+    footer {
+      padding: 28px 20px 40px;
+      text-align: center;
+      color: #86868b;
+      font-size: 12px;
+      background: var(--bg);
     }
-    @media (max-width: 760px) {
-      .hero, .split, .split.flip { grid-template-columns: 1fr; }
-      .split.flip .copy { order: 0; }
-      .hero { margin-bottom: 48px; }
-      .split { margin: 56px 0; }
-      figure img, .photo, figure.portrait img { aspect-ratio: 16 / 10; }
+    @media (max-width: 800px) {
+      .sheet { grid-template-columns: 1fr; }
+      .side { border-left: none; border-top: 1px solid var(--line); }
+      .toast { margin: 8px 0 16px; }
+      .grid, .pair { grid-template-columns: 1fr; }
+      .sheet { min-height: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header class="hero">
-      <div>
-        <div class="eyebrow"><img src="img/icon128.png" alt="">划词翻译</div>
-        <h1>选中，就译成中文。</h1>
-        <p class="lead">短句停在文字旁边。长文在页面右侧展开。某一段没有译成，留下一句安静的话，你可以再试一次。</p>
-      </div>
-      <figure>
-        <img src="img/hero-desk.jpg" alt="阳光下的木桌，摊开的空白笔记本、一只杯子，和一台屏幕留白的笔记本。">
-        <figcaption>阅读本来就是一件安静的事。</figcaption>
-      </figure>
-    </header>
+  <nav>
+    <a class="brand" href="#top"><img src="img/icon128.png" alt="">划词翻译</a>
+    <div class="nav-links">
+      <a href="#short">短句</a>
+      <a href="#long">长文</a>
+      <a href="#again">重译</a>
+      <a href="#start">开始使用</a>
+    </div>
+  </nav>
 
-    <section class="split">
-      <div class="copy">
-        <h2>一句，停在旁边。</h2>
-        <p>在网页上松开鼠标，译文出现在选区附近。纯中文不会被打扰。也可以关掉自动翻译，改成先看到一个按钮，点了再译。</p>
-        <p class="quiet">点到弹层外面，或按 Esc，这条短译文会收起。页面滚动时，它跟着选区走。</p>
-      </div>
-      <div class="visual">
-        <div class="mock" aria-hidden="true">
-          <div class="toast-h"><span>划词翻译</span><span>✕</span></div>
-          <div class="toast-b">
-            清晨的镇子很安静。
-            <div class="meta">原文：The morning was quiet · 百度</div>
+  <header class="hero" id="top">
+    <h1>选中。<br>译成中文。</h1>
+    <p class="sub">在网页上松开鼠标。译文停在这句话旁边。</p>
+    <div class="stage" id="short">
+      <div class="window">
+        <div class="winbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">一篇清晨的短文</span>
+        </div>
+        <div class="article">
+          <h3>The Morning</h3>
+          <p>The town was still asleep. <span class="mark">The morning was quiet, and the street began to fill with people.</span></p>
+          <div class="toast">
+            <header><span>划词翻译</span><span>✕</span></header>
+            <div class="body">
+              清晨很安静，街上渐渐有了人。
+              <div class="meta">原文：The morning was quiet… · 百度</div>
+            </div>
           </div>
+          <p>Anna walked on with a cup of coffee, past the bakery and toward the library.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </header>
 
-    <section class="split flip">
-      <figure>
-        <img src="img/side-panel.jpg" alt="书页旁边立着一张留白的卡片，左侧有一道很淡的绿线。">
-      </figure>
-      <div class="copy">
-        <h2>一篇，在旁边读完。</h2>
-        <p>超过 500 字，或按下 <code>⌘ A</code>，右侧滑出侧窗。里面只有中文。点一段译文，原文会亮起来；点原文，侧窗会滚到对应的一段。</p>
-        <div class="mock" aria-hidden="true">
-          <div class="side-h"><div><strong>全文翻译</strong><span class="badge">DeepSeek</span></div><span>收起</span></div>
-          <div class="row">清晨的镇子很安静。鸟在树上叫，街上渐渐有了去上班的人。</div>
-          <div class="row">安娜拿着一杯咖啡，沿主街往前走。</div>
-          <div class="row"><div class="skel"></div><div class="skel short"></div></div>
+  <section class="chapter" id="long">
+    <h2>长文，在旁边读完。</h2>
+    <p class="lead">超过 500 字，或按下 Command + A。右侧滑出侧窗，里面只有中文。点一段，原文和译文会一起找到对方。</p>
+    <div class="stage">
+      <div class="window">
+        <div class="winbar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">全文翻译</span>
         </div>
-        <p class="quiet">左缘可以拖宽，最宽到页面的一半。点空白处，或按 Esc，侧窗收成一枚圆球。译文还在，点一下就回来。</p>
-        <div class="ball-row">
-          <div class="ball">译</div>
-          <p class="quiet" style="margin:0">收起不是关掉。它只是先让开。</p>
+        <div class="sheet">
+          <div class="article">
+            <h3>Chapter One</h3>
+            <p class="mark">The sun rose slowly over the quiet town. Birds began to sing, and the streets filled with people going to work.</p>
+            <p>Anna walked down the main street with a cup of coffee. She smiled at the baker and stopped by the fountain.</p>
+            <p>The library was cool and quiet. She found her corner near the window and stayed for the morning.</p>
+          </div>
+          <aside class="side">
+            <header><div><strong>全文翻译</strong><span class="pill">DeepSeek</span></div><span>收起</span></header>
+            <div class="row on">太阳慢慢升上安静的小镇。鸟开始叫，街上渐渐挤满去上班的人。</div>
+            <div class="row">安娜端着咖啡沿主街走。她对面包师笑了笑，在喷泉边停了一会儿。</div>
+            <div class="row"><div class="skel"></div><div class="skel s"></div></div>
+          </aside>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="split">
-      <div class="copy">
-        <h2>没译成的那一段。</h2>
-        <p>长文是一段一段译的。某一段没有回来，不会整篇重来。它留在原来的位置，你可以只重译这一段。</p>
-        <div class="mock" aria-hidden="true">
-          <div class="row fail">
+  <section class="chapter dark" id="again">
+    <h2>没译成的，留在原地。</h2>
+    <p class="lead">不会整篇重来。那一段还在原来的位置，轻点一次，只译它。</p>
+    <div class="stage">
+      <div class="window focus">
+        <aside class="side" style="border:none">
+          <header><div><strong>全文翻译</strong><span class="pill">DeepSeek</span></div><span>完成，1 段失败</span></header>
+          <div class="row">安娜端着咖啡沿主街走。</div>
+          <div class="row bad">
             这一段未能完成翻译，轻点「重新翻译」继续
-            <div class="btn">重新翻译</div>
+            <div class="retry">重新翻译</div>
           </div>
-        </div>
-        <p class="quiet">具体原因放在按钮的悬停里。顶栏会写着还有几段没完成，而不是把整篇又标成进行中。</p>
+          <div class="row">图书馆里又凉又静。她在窗边坐了下来。</div>
+        </aside>
       </div>
-      <figure class="portrait">
-        <img src="img/green-stone.jpg" alt="米色纸面上，一枚浅绿色的圆石靠在右侧。">
-      </figure>
-    </section>
+    </div>
+    <div class="float-line">
+      <div class="orb">译</div>
+      <p>点空白处或按 Esc，侧窗收成这枚圆球。译文还在。点一下，它就回来。</p>
+    </div>
+  </section>
 
-    <section class="guide">
-      <h2>装上，然后填上你自己的密钥。</h2>
-      <p class="quiet">密钥只出现在设置页里。不要写进代码，也不要发给别人。</p>
-      <div class="cards">
-        <article class="card">
-          <h2>两分钟装好</h2>
-          <ol class="steps">
-            <li>在仓库页面选择 Code，下载 ZIP，并解压。</li>
-            <li>打开 Chrome，地址栏输入 <code>chrome://extensions/</code>。</li>
-            <li>打开右上角的「开发者模式」。</li>
-            <li>点「加载未打包的扩展程序」，选中解压后的 <code>huaci-translate</code> 文件夹。</li>
-          </ol>
-          <p class="quiet">选的是文件夹本身。仓库里的 <code>test-full.html</code> 可以用来试长文。</p>
-        </article>
-        <article class="card">
-          <h2>打开设置</h2>
-          <p>这个扩展没有弹出按钮。设置在扩展详情里。</p>
-          <ol class="steps">
-            <li>回到 <code>chrome://extensions/</code>，找到「划词翻译」。</li>
-            <li>点「详细信息」，再点「扩展程序选项」。</li>
-            <li>确认「启用插件」是打开的。自动翻译可以关掉，关掉后会先出现按钮。</li>
-            <li>选择引擎，填入 ID 或密钥，点「保存设置」。</li>
-            <li>点「测试翻译」。能看到中文，就配置好了。</li>
-          </ol>
-        </article>
-        <article class="card">
-          <h2>申请百度翻译</h2>
-          <p>短句可以走百度标准版。长文不走百度。</p>
-          <ol class="steps">
-            <li>打开 <a href="https://fanyi-api.baidu.com/" target="_blank" rel="noopener">百度翻译开放平台</a>，用百度账号登录。</li>
-            <li>开通「通用文本翻译 API」，选择标准版。</li>
-            <li>创建应用。应用名可以写成「划词翻译」。</li>
-            <li>在管理控制台的「开发者信息」里复制 APP ID 和密钥。</li>
-            <li>引擎选「百度翻译」，填入这两项，保存，再点「测试翻译」。</li>
-          </ol>
-          <div class="note">标准版大约每秒一次。若提示 IP 不在白名单，把当前电脑的公网 IP 加进该应用的白名单。</div>
-        </article>
-      </div>
-    </section>
-
-    <section class="split">
-      <div class="copy">
-        <h2>长文，需要 DeepSeek。</h2>
-        <p>侧窗里的全文固定使用 DeepSeek，这样可以分段并行，也不占用百度每秒一次的额度。只想划短句的话，可以只配置百度。</p>
-        <ol class="steps">
-          <li>打开 <a href="https://platform.deepseek.com/" target="_blank" rel="noopener">DeepSeek 开放平台</a>，注册并登录。</li>
-          <li>在 API Keys 里创建一个密钥。它通常只显示一次，请自己保存好。</li>
-          <li>在插件设置里先把引擎切到 DeepSeek，才能看到密钥输入框。填入后保存。</li>
-          <li>短句若仍想用百度，可以再把引擎切回百度。已经保存的 DeepSeek 密钥会留着，长文继续用它。</li>
+  <section class="start" id="start">
+    <h2>开始使用。</h2>
+    <p class="lead">密钥只填写在你自己的浏览器里。不要写进代码，也不要发给别人。</p>
+    <div class="grid">
+      <article>
+        <div class="num">01</div>
+        <h3>装进 Chrome</h3>
+        <ol>
+          <li>下载本仓库并解压。</li>
+          <li>打开 <code>chrome://extensions/</code>，打开开发者模式。</li>
+          <li>加载未打包的扩展程序，选中 <code>huaci-translate</code> 文件夹。</li>
         </ol>
-        <p class="quiet">费用按量计算。请以 DeepSeek 官网的当前价格为准。</p>
-      </div>
-      <div class="copy">
-        <h2>文字会去哪里。</h2>
-        <p>选中的文字会发送到你所配置的百度或 DeepSeek，用来生成译文。密钥存在这台浏览器本地，不会写进这个仓库，也不会上传到插件作者的服务器。</p>
-        <p>网银、邮箱、病历这类页面，用的时候可以把插件先关掉。</p>
-        <div class="note">划词翻译 · 0.1.0。源代码与安装说明见仓库首页。本页是产品介绍，密钥不会出现在这里。</div>
-      </div>
-    </section>
-  </main>
+        <p class="note">选文件夹本身。仓库里的 test-full.html 可以用来试长文。</p>
+      </article>
+      <article>
+        <div class="num">02</div>
+        <h3>打开设置</h3>
+        <p>扩展没有弹出按钮。到扩展详情里找选项。</p>
+        <ol>
+          <li>在扩展页找到「划词翻译」，点详细信息，再点扩展程序选项。</li>
+          <li>确认已启用。自动翻译可以关掉，关掉后会先出现按钮。</li>
+          <li>填入密钥，保存，再点测试翻译。</li>
+        </ol>
+      </article>
+      <article>
+        <div class="num">03</div>
+        <h3>申请百度翻译</h3>
+        <p>短句可以走百度标准版，有免费额度。</p>
+        <ol>
+          <li>打开 <a href="https://fanyi-api.baidu.com/">百度翻译开放平台</a>，用百度账号登录。</li>
+          <li>开通通用文本翻译 API，选择标准版，创建应用。</li>
+          <li>在开发者信息里复制 APP ID 和密钥，填进设置并测试。</li>
+        </ol>
+        <p class="note">标准版大约每秒一次。若提示 IP 不在白名单，把当前电脑的公网 IP 加进该应用。</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="pair">
+      <article>
+        <h3>长文用 DeepSeek。</h3>
+        <p>侧窗固定走 DeepSeek，不占用百度每秒一次的额度。只划短句时，可以只配置百度。</p>
+        <ol>
+          <li>在 <a href="https://platform.deepseek.com/">DeepSeek 开放平台</a> 创建 API Key。它通常只显示一次。</li>
+          <li>设置里先把引擎切到 DeepSeek，密钥框才会出现。填入并保存。</li>
+          <li>短句若仍用百度，再把引擎切回去。DeepSeek 密钥会留着，给长文用。</li>
+        </ol>
+      </article>
+      <article>
+        <h3>文字会去哪里。</h3>
+        <p>选中的文字会发到你配置的百度或 DeepSeek，用来生成译文。密钥存在这台浏览器本地，不会进入这个仓库。</p>
+        <p>网银、邮箱、病历这类页面，用的时候先把插件关掉。</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>划词翻译 · 0.1.0</footer>
 </body>
 </html>
