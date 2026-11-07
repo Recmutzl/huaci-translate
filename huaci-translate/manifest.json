@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "划词翻译",
   "version": "0.1.0",
-  "description": "选中网页文字，自动翻译成中文。支持百度翻译与 DeepSeek 双引擎切换。",
+  "description": "划词翻译插件。选中网页文字译成中文，支持百度翻译与 DeepSeek。",
   "permissions": ["storage"],
   "host_permissions": [
     "https://fanyi-api.baidu.com/*",
