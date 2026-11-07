@@ -2,6 +2,18 @@
 
 选中网页里的文字，译成中文。短句停在选区旁边，长文在页面右侧展开。某一段没有译成时，可以只重译这一段。
 
+短句停在选区旁边。
+
+<img src="docs/img/intro-short.png" alt="选中英文后，中文译文出现在旁边" width="100%">
+
+长文在右侧展开，点一段，原文和译文会对上。
+
+<img src="docs/img/intro-long.png" alt="右侧全文翻译侧窗与原文段落对照" width="100%">
+
+没译成的那一段留在原地，可以只重译这一段。
+
+<img src="docs/img/intro-retry.png" alt="失败段落显示重新翻译按钮" width="100%">
+
 这是一个 Chrome 扩展（Manifest V3）。密钥由每位使用者自己申请，只保存在自己的浏览器里。仓库中没有任何密钥。
 
 图文介绍：<https://recmutzl.github.io/huaci-translate/>（源文件在 [docs/index.html](docs/index.html)）
