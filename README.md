@@ -4,7 +4,7 @@
 
 这是一个 Chrome 扩展（Manifest V3）。密钥由每位使用者自己申请，只保存在自己的浏览器里。仓库中没有任何密钥。
 
-图文介绍：[docs/index.html](docs/index.html)
+图文介绍：<https://recmutzl.github.io/huaci-translate/>（源文件在 [docs/index.html](docs/index.html)）
 
 ## 安装
 
